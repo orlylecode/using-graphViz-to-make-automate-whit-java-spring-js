@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Template</title>
+    <link rel="stylesheet" type="text/css"
+          href="../static/css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css"
+          href="../static/css/myStyle.css"
+          th:href="@{/css/myStyle.css}"/>
+
+</head>
+<body>
+<header >
+
+    <div class="navbar navbar-inverse" >
+        <div class="container-fluid" style="height:50px;">
+            <ul class="nav text-center navbar-nav"  style="height:70px; font-size: 1.3em; padding-top: 10px;">
+<!--                <li class="glyphicon-home"></li>-->
+                <li id="def" style="margin-left: 100px"><a href="#">Definition et transformation de l'automate</a></li>
+                <li id="reco"><a href="#">Reconnaissance de mot </a></li>
+                <li id="ope"><a href="#">Operations sur les automate</a></li>
+            </ul>
+        </div>
+
+    </div>
+</header>
+<div class="container-fluid">
+    <div id="definition"  class="panel panel-primary container-fluid col-sm-12 " style="margin: 10px">
+        <div class="panel-heading ">Nouvelle Automate et Nature</div>
+        <div class="panel-body ">
+
+            <form th:action="@{/automate}" id="enregistrer" method="get" class="form-horizontal col-sm-12">
+            <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3"> Etats :</label>
+                        <input oninput="addTable('table','tableVal','transitions','etats')" id="etats" class="col-sm-9" type="text" th:value="${etats}" name="etats"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3"> alphabet :</label>
+                        <input class="col-sm-9" type="text" th:value="${alphabet}" name="alphabet"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3">Etats initiaux :</label>
+                        <input class="col-sm-9" type="text" th:value="${etatsInit}" name="etatsInit"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3">Etats Finaux :</label>
+                        <input class="col-sm-9" type="text" th:value="${etatsFinaux}" name="etatsFinaux"/>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label  col-sm-3"> Transitions :</label>
+                        <input class="col-sm-9" id="transitions" type="text" th:value="${transitions}" name="transitions"/>
+                    </div>
+                </div>
+
+                <div class="col-sm-5" style="margin-left: 50px">
+                            <fieldset>
+                                <legend><h5> Les Transitions  </h5></legend>
+                                <div id="table"></div>
+                            </fieldset>
+
+
+                    <input name="graph" id="graphInput" th:value="${graphAutomate}" hidden/>
+
+                </div>
+
+
+            </form>
+
+
+            <div class="col-sm-3">
+                <div class="col-sm-6">
+                    <button onclick='send("enregistrer")' type="submit" class="btn btn-primary">Enregistre | Afficher</button>
+                    <div style="margin: 10px">
+
+                        <div id="graphOutput" class="form-group col-sm-6">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form th:action="@{/minimiser}" method="get" class="form-horizontal col-sm-3">
+                <input class="col-sm-9" type="text" th:value="${etatsInit}" name="etatsInit" hidden/>
+                <input class="col-sm-9" type="text" th:value="${etats}" name="etats" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${alphabet}" name="alphabet" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${etatsFinaux}" name="etatsFinaux" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${transitions}" name="transitions" hidden/>
+
+                <button type="submit" class="btn btn-primary">Minimiser</button>
+                <input name="graph1" id="graphInput1" th:value="${minimiser}" hidden/>
+                <div id="graphOutput1" class="form-group col-sm-pull-10">
+                </div>
+
+            </form>
+
+
+            <form th:action="@{/determiniser}" method="get" class="form-horizontal col-sm-3">
+                <input class="col-sm-9" type="text" th:value="${etatsInit}" name="etatsInit" hidden/>
+                <input class="col-sm-9" type="text" th:value="${etats}" name="etats" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${alphabet}" name="alphabet" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${etatsFinaux}" name="etatsFinaux" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${transitions}" name="transitions" hidden/>
+                <button type="submit" class="btn btn-primary">Determiniser</button>
+                <input name="graph2" id="graphInput2" th:value="${determiniser}" hidden/>
+                <div id="graphOutput2" class="form-group col-sm-pull-10">
+                </div>
+
+            </form>
+
+
+            <form th:action="@{/completer}" method="get" class="form-horizontal col-sm-3">
+                <input class="col-sm-9" type="text" th:value="${etatsInit}" name="etatsInit" hidden/>
+                <input class="col-sm-9" type="text" th:value="${etats}" name="etats" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${alphabet}" name="alphabet" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${etatsFinaux}" name="etatsFinaux" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${transitions}" name="transitions" hidden/>
+                <button type="submit" class="btn btn-primary">completer</button>
+                <input name="graph3" id="graphInput3" th:value="${completer}" hidden/>
+                <div id="graphOutput3" class="form-group col-sm-pull-10">
+                </div>
+
+            </form>
+<!--
+            <div style="margin: 10px">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-1">
+                    <a th:href="@{/verifi(etats=${etats},alphabet=${alphabet},etatsInit=${etatsInit},etatsFinaux=${etatsFinaux},transitions=${transitions})}"
+                       class="btn btn-primary"> Nature ?</a>
+                </div>
+            </div>-->
+
+
+            <div th:if="${nature != null}" style="margin: 10px" class="col-sm-12">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    l'automate est un : <strong th:text="${nature}"></strong>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+    <div id="reconnaissance" class="panel panel-primary container-fluid col-sm-12 " style="margin: 10px">
+        <div class="panel-heading ">Reconnaissance des mots par l'Automate</div>
+        <div class="panel-body ">
+            <form id="form" th:action="@{/reconnaissance}" method="get" class="form-horizontal">
+
+                <div class="form-group" style="margin: 10px">
+                    <label class="control-label  col-sm-3"> Separateur :</label>
+                    <input class="col-sm-9" type="text" th:value="${separateur}" name="separateur"/>
+                </div>
+
+                <div class="md-form amber-textarea active-amber-textarea">
+                    <label for="form19">texte ou mot(s) a reconnaitre</label>
+                    <textarea name="texte" th:text="${texte}" id="form19" class="md-textarea form-control"
+                              rows="14"></textarea>
+                </div>
+                <input class="col-sm-9" type="text" th:value="${etatsInit}" name="etatsInit" hidden/>
+                <input class="col-sm-9" type="text" th:value="${etats}" name="etats" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${alphabet}" name="alphabet" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${etatsFinaux}" name="etatsFinaux" hidden/>
+
+                <input class="col-sm-9" type="text" th:value="${transitions}" name="transitions" hidden/>
+
+
+                <fieldset style="margin: 50px">
+                    <legend><h4>Coloration (mots reconnus = en bleu ,mots non reconnus=rouge)</h4></legend>
+                    <div th:utext="${color}"></div>
+                </fieldset>
+            </form>
+
+
+            <div style="margin: 10px ; margin-top: 10px">
+                <div class="col-sm-10"></div>
+                <div class="col-sm-1">
+                    <button type="submit" class="btn btn-primary" onclick="send('form')"> reconnaitre</button>
+                </div>
+            </div>
+            <div style="margin: 10px" class="col-sm-12">
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong th:text="${mots}"></strong>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!--    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+
+    <div id="union" class="panel panel-default container-fluid col-sm-12 " style="margin: 10px">
+        <div class="col-sm-3">
+            <div class="panel-heading ">Reconnaissance des mots par L'union des automates</div>
+            <div class="panel-body ">
+
+
+                <form id="form1" th:action="@{/reconnaissance}" method="get" class="form-horizontal">
+
+                    <div class="form-group" style="margin: 10px">
+                        <label class="control-label  col-sm-3"> Separateur :</label>
+                        <input class="col-sm-9" type="text" th:value="${separateur}" name="separateur"/>
+                    </div>
+
+                    <div class="md-form amber-textarea active-amber-textarea">
+                        <label for="form19">texte ou mot(s) a reconnaitre</label>
+                        <textarea name="texte" th:text="${texte}"  class="md-textarea form-control"
+                                  rows="14"></textarea>
+                    </div>
+                    <input class="col-sm-9" type="text" th:value="${etatsInit}" name="etatsInit" hidden/>
+                    <input class="col-sm-9" type="text" th:value="${etats}" name="etats" hidden/>
+
+                    <input class="col-sm-9" type="text" th:value="${alphabet}" name="alphabet" hidden/>
+
+                    <input class="col-sm-9" type="text" th:value="${etatsFinaux}" name="etatsFinaux" hidden/>
+
+                    <input class="col-sm-9" type="text" th:value="${transitions}" name="transitions" hidden/>
+
+
+                    <fieldset style="margin: 50px">
+                        <legend><h4>Coloration (mots reconnus = en bleu ,mots non reconnus=rouge)</h4></legend>
+                        <div th:utext="${color}"></div>
+                    </fieldset>
+                </form>
+
+
+                <div style="margin: 10px ; margin-top: 10px">
+                    <div class="col-sm-10"></div>
+                    <div class="col-sm-1">
+                        <button type="submit" class="btn btn-primary" onclick="send('form1')"> reconnaitre</button>
+                    </div>
+                </div>
+                <div style="margin: 10px" class="col-sm-12">
+                    <div class="alert alert-danger alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong th:text="${mots}"></strong>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="panel-heading ">Reconnaissance des mots par L'union des automates</div>
+            <div class="panel-body ">
+                <div class="col-sm-12">
+<div class="col-sm-8">
+    <div class="col-sm-12">
+
+        <form th:action="@{/union}" id="aut1" method="get" class="form-horizontal col-sm-12">
+            <div class="col-sm-6">
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3"> Etats :</label>
+                    <input oninput="addTable('table1','tableVal1','transitions1','etats1')"  id="etats1" class="col-sm-9" type="text" th:value="${etats1}" name="etats1"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3"> alphabet :</label>
+                    <input class="col-sm-9" type="text" th:value="${alphabet1}" name="alphabet1"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3">Etats initiaux :</label>
+                    <input class="col-sm-9" type="text" th:value="${etatsInit1}" name="etatsInit1"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3">Etats Finaux :</label>
+                    <input class="col-sm-9" type="text" th:value="${etatsFinaux1}" name="etatsFinaux1"/>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3"> Transitions :</label>
+                    <input class="col-sm-9" id="transitions1" type="text" th:value="${transitions1}" name="transitions1"/>
+                </div>
+            </div>
+
+            <div class="col-sm-5" style="margin-left: 50px">
+                <fieldset>
+                    <legend><h5> Les Transitions  </h5></legend>
+                    <div id="table1"></div>
+                </fieldset>
+
+
+                <input name="graph4" id="graphInput4" th:value="${graphAutomate1}" hidden/>
+
+            </div>
+
+
+        </form>
+        <div class="col-sm-3">
+            <div class="col-sm-6">
+                <button onclick='send2("aut1")'  class="btn btn-primary">Enregistre | Afficher</button>
+                <div style="margin: 10px">
+
+                    <div id="graphOutput4" class="form-group col-sm-6">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+    <div class="col-sm-12">
+
+
+        <form th:action="@{/union}" id="aut2" method="get" class="form-horizontal col-sm-12">
+            <div class="col-sm-6">
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3"> Etats :</label>
+                    <input oninput="addTable('table2','tableVal2','transitions2','etats2')"  id="etats2" class="col-sm-9" type="text" th:value="${etats2}" name="etats2" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3"> alphabet :</label>
+                    <input class="col-sm-9" type="text" th:value="${alphabet2}" name="alphabet2"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3">Etats initiaux :</label>
+                    <input class="col-sm-9" type="text" th:value="${etatsInit2}" name="etatsInit2"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3">Etats Finaux :</label>
+                    <input class="col-sm-9" type="text" th:value="${etatsFinaux2}" name="etatsFinaux2"/>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label  col-sm-3"> Transitions :</label>
+                    <input class="col-sm-9" id="transitions2" type="text" th:value="${transitions2}" name="transitions2"/>
+                </div>
+            </div>
+
+            <div class="col-sm-5" style="margin-left: 50px">
+                <fieldset>
+                    <legend><h5> Les Transitions  </h5></legend>
+                    <div id="table2"></div>
+                </fieldset>
+
+
+                <input name="graph5" id="graphInput5" th:value="${graphAutomate2}" hidden/>
+
+            </div>
+
+
+        </form>
+        <div class="col-sm-3">
+            <div class="col-sm-6">
+                <button onclick='send("aut2")'  class="btn btn-primary">Enregistre | Afficher</button>
+                <div style="margin: 10px">
+
+                    <div id="graphOutput5" class="form-group col-sm-6">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+                    <div class="col-sm-4" >
+        <form id="unir" th:action="@{/union}" method="get"  class="form-horizontal col-sm-3">
+            <input class="col-sm-9" type="text" th:value="${etatsInitU}" name="etatsInitU" hidden/>
+            <input class="col-sm-9" type="text" th:value="${etatsU}" name="etatsU" hidden/>
+
+            <input class="col-sm-9" type="text" th:value="${alphabetU}" name="alphabetU" hidden/>
+
+            <input class="col-sm-9" type="text" th:value="${etatsFinauxU}" name="etatsFinauxU" hidden/>
+
+            <input class="col-sm-9" type="text" th:value="${transitionsU}" name="transitionsU" hidden/>
+            <button onclick="send('unir')" class="btn btn-primary">Unir</button>
+            <input name="graph6" id="graphInput6" th:value="${graphAutomateU}" hidden/>
+            <div id="graphOutput6" class="form-group col-sm-6">
+            </div>
+
+        </form>
+    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/viz.js}"></script>
+<script type="text/javascript" th:src="@{/js/full.render.js}"></script>
+<script type="text/javascript" th:src="@{/js/lite.render.js}"></script>
+<script type="text/javascript" th:src="@{/js/app.js}"></script>
+<script type="text/javascript" th:src="@{/js/viz.es.js}"></script>
+
+<script th:inline="javascript">
+
+/*function transition() {
+    var alphabet = document.getElementById("etats");
+    var alphabets = alphabet.split(",");
+    alphabets.forEach(function (value) {
+        alert(value);
+    })
+}*/
+
+        var def = document.getElementById("definition");
+        var reco = document.getElementById("reconnaissance");
+        var union = document.getElementById("union");
+
+        var a = document.getElementById("def");
+        var b = document.getElementById("reco");
+        var c = document.getElementById("ope");
+
+        reco.style.display = "none";
+        union.style.display = "none";
+
+       /* if(document.getElementById("form9").value!=null){
+            reco.style.display = "inline-block";
+            def.style.display ="none";
+            union.style.display = "none";
+        }
+
+    if(document.getElementById("opUnion").value!=null){
+        union.style.display = "inline-block";
+        def.style.display ="none";
+        reco.style.display = "none";
+        }*/
+
+        a.addEventListener("click" , function (){
+            reco.style.display = "none";
+            union.style.display = "none";
+            def.style.display="inline-block";
+        });
+
+        b.addEventListener("click" , function (){
+            def.style.display = "none";
+            union.style.display = "none";
+            reco.style.display="inline-block";
+        });
+
+        c.addEventListener("click" , function (){
+            def.style.display = "none";
+            reco.style.display = "none";
+            union.style.display="inline-block";
+        });
+
+
+    function send(id) {
+        document.getElementById(id).submit();
+    }
+
+
+function send2(id1,id2) {
+    document.getElementById(id1).submit();
+    document.getElementById(id2).submit();
+}
+
+function send3(id1,id2,id3) {
+    document.getElementById(id1).submit();
+    document.getElementById(id3).submit();
+    document.getElementById(id2).submit();
+}
+/////////////////////////////////////////////////////////////////////////////////
+
+function addTable(table,idTable ,idTransition,idEtat){
+        var param = "\""+idTable+"\",\""+idTransition+"\",\""+idEtat+"\"";
+    var string = '<table oninput=\'transition('+param+')\' class="table" id='+idTable+'><thead><tr><th scope="col">#</th>';
+    var th= "";
+    var etat = document.getElementById(idEtat).value;
+
+    var etats =etat.split(",");
+    etats.forEach(element => {
+        th=th+'<th scope="col">'+element+'</th>';
+});
+    string=string+th+'</tr></thead><tbody>';
+
+    etats.forEach(element=>{
+        th='<tr><th scope="row">'+element+'</th>';
+    etats.forEach(element => {
+        th=th+'<td contenteditable=\'true\'>'+""+'</td>';
+});
+    th=th+'</tr>';
+    string=string+th;
+});
+
+    string=string +'</tbody></table>';
+    document.getElementById(table).innerHTML=string;
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+function transition(idTable, idTransitions,idEtat){
+    var etat = document.getElementById(idEtat).value;
+    var etats =etat.split(",");
+    var tran="";
+    var a ;
+    var b;
+    var c;
+    var i,j;
+    for ( i=0;i<etats.length;i++) {
+        for ( j=0;j<etats.length;j++) {
+            var dep = document.getElementById(idTable).rows[i+1].cells;
+            //dep[1].innerHTML ;
+
+            var arr = document.getElementById(idTable).rows[0].cells;
+            //arr[j].innerHTML ;
+            var sym = document.getElementById(idTable).rows[i+1].cells;
+            //sym[j].innerHTML ;
+            b=sym[j+1].innerHTML.replace("&nbsp;","");
+            c=arr[j+1].innerHTML.replace("&nbsp;","");
+            a=dep[0].innerHTML.replace("&nbsp;","");
+            a=dep[0].innerHTML.replace("<br>","");
+            b=sym[j+1].innerHTML.replace("<br>","");
+            c=arr[j+1].innerHTML.replace("<br>","");
+
+            b.split(",").forEach(elt =>{
+                if(elt!=""){
+                tran=tran+a+","+elt+","+c+";";
+            }
+
+        });
+            //c=arr[j+1].innerHTML.replace("<br>","");
+            //tran=tran+a+","+b+","+c+";";
+        }
+        document.getElementById(idTransitions).value=tran;
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+    var graph = document.getElementById("graphInput").value;
+    var graph1 = document.getElementById("graphInput1").value;
+    var graph2 = document.getElementById("graphInput2").value;
+    var graph3 = document.getElementById("graphInput3").value;
+    var graph4 = document.getElementById("graphInput4").value;
+var graph5 = document.getElementById("graphInput5").value;
+var graph6 = document.getElementById("graphInput6").value;
+    var viz = new Viz();
+
+    viz.renderSVGElement(graph)
+        .then(function (element) {
+            document.getElementById("graphOutput").appendChild(element);
+        })
+
+    viz.renderSVGElement(graph1)
+        .then(function (element) {
+            document.getElementById("graphOutput1").appendChild(element);
+        })
+
+    viz.renderSVGElement(graph2)
+        .then(function (element) {
+            document.getElementById("graphOutput2").appendChild(element);
+        })
+
+        viz.renderSVGElement(graph3)
+            .then(function (element) {
+                document.getElementById("graphOutput3").appendChild(element);
+            })
+
+viz.renderSVGElement(graph4)
+    .then(function (element) {
+        document.getElementById("graphOutput4").appendChild(element);
+    })
+
+viz.renderSVGElement(graph5)
+    .then(function (element1) {
+        document.getElementById("graphOutput5").appendChild(element1);
+    })
+
+viz.renderSVGElement(graph6)
+    .then(function (element) {
+        document.getElementById("graphOutput6").appendChild(element);
+    })
+
+</script>
+</body>
+</html>
